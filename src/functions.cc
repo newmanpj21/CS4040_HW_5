@@ -70,5 +70,28 @@ EdgeData::EdgeData()
 
 void EdgeData::prims()
 {
-    //
-}
+    // create a vector to store the vertices that have been visited
+    vector<int> visited;
+
+    // create a vector to store the vertices that have not been visited
+    vector<int> notVisited;
+    for (int i = 0; i < this->numVertices; i++)
+    {
+        notVisited.push_back(i);
+    }
+
+    // choose the first vertex to be the starting vertex
+    visited.push_back(notVisited[0]);
+    notVisited.erase(notVisited.begin());
+    int distance = 0;
+
+    // loop until all vertices have been visited
+    while (notVisited.size() > 0)
+    {
+        // find the edge with the smallest weight that has one vertex in visited and one vertex in notVisited
+        int smallestWeight = 1000000;
+        int smallestWeightIndex = 0;
+        for (int i = 0; i < this->edges.size(); i++)
+        {
+            // check if the edge has one vertex in visited and one vertex in notVisited
+        }
