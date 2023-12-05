@@ -17,7 +17,10 @@ int main()
 {
     // read the data from the file (must use the relative path from the CS4040_HW5 directory)
     EdgeData container;
-    readData(container, "./test/graph1.txt");
+    readData(container, "./test/graph_v100_e150.txt");
+
+    // test prims algorithm
+    vector<Edge> edges = container.prims();
 
     return 0;
 }

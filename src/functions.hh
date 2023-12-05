@@ -41,7 +41,7 @@ public:
      * @brief performs Prim's algorithm on the data
      *
      */
-    void prims();
+    vector<Edge> prims();
 };
 
 /**

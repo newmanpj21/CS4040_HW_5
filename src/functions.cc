@@ -6,6 +6,9 @@
  */
 
 #include "functions.hh"
+#include <climits>
+#include <algorithm>
+#include <set>
 
 using namespace std;
 
@@ -33,9 +36,15 @@ void readData(EdgeData &container, string filename)
     int source;
     int destination;
     int weight;
+    string check;
     while (!instream.eof())
     {
-        getline(instream, temp, ',');
+
+        getline(instream, check, ',');
+        if (check == "")
+        {
+            break;
+        }
         source = stoi(temp);
         getline(instream, temp, ',');
         destination = stoi(temp);
@@ -68,30 +77,41 @@ EdgeData::EdgeData()
     this->numVertices = 0;
 }
 
-void EdgeData::prims()
+vector<Edge> EdgeData::prims()
 {
-    // create a vector to store the vertices that have been visited
-    vector<int> visited;
-
-    // create a vector to store the vertices that have not been visited
-    vector<int> notVisited;
-    for (int i = 0; i < this->numVertices; i++)
+    vector<Edge> mst;
+    set<int> allVertices;
+    for (const auto &edge : edges)
     {
-        notVisited.push_back(i);
+        allVertices.insert(edge.source);
+        allVertices.insert(edge.destination);
     }
 
-    // choose the first vertex to be the starting vertex
-    visited.push_back(notVisited[0]);
-    notVisited.erase(notVisited.begin());
-    int distance = 0;
+    set<int> visitedVertices;
+    visitedVertices.insert(edges[0].source); // start from the source of the first edge
 
-    // loop until all vertices have been visited
-    while (notVisited.size() > 0)
+    while (visitedVertices != allVertices)
     {
-        // find the edge with the smallest weight that has one vertex in visited and one vertex in notVisited
-        int smallestWeight = 1000000;
-        int smallestWeightIndex = 0;
-        for (int i = 0; i < this->edges.size(); i++)
+        Edge nextEdge;
+        int minWeight = INT_MAX;
+
+        for (const auto &edge : edges)
         {
-            // check if the edge has one vertex in visited and one vertex in notVisited
+            if ((visitedVertices.count(edge.source) && !visitedVertices.count(edge.destination)) ||
+                (visitedVertices.count(edge.destination) && !visitedVertices.count(edge.source)))
+            {
+                if (edge.weight < minWeight)
+                {
+                    nextEdge = edge;
+                    minWeight = edge.weight;
+                }
+            }
         }
+
+        mst.push_back(nextEdge);
+        visitedVertices.insert(nextEdge.source);
+        visitedVertices.insert(nextEdge.destination);
+    }
+
+    return mst;
+}
