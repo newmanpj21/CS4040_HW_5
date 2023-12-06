@@ -42,6 +42,18 @@ public:
      *
      */
     vector<Edge> prims();
+
+    /**
+     * @brief performs Kruskal's algorithm on the data without path compression
+     *
+     */
+    vector<Edge> kruskals();
+
+    /**
+     * @brief performs Kruskal's algorithm on the data with path compression
+     *
+     */
+    vector<Edge> kruskalsPathCompression();
 };
 
 /**
@@ -67,3 +79,37 @@ void printToFile(vector<Edge> edges, int numVertices, string filename);
  * @return int the number of vertices in the graph
  */
 int calculateNumVertices(vector<Edge> edges);
+
+/**
+ * @brief find function for disjoint set
+ * @param parent the parent array
+ * @param i the index to find the parent of
+ * @return int the parent of the index
+ */
+int find(vector<int> &parent, int i);
+
+/**
+ * @brief find function for disjoint set with path compression
+ * @param parent the parent array
+ * @param i the index to find the parent of
+ * @return int the parent of the index
+ */
+int findPathCompression(vector<int> &parent, int i);
+
+/**
+ * @brief union function for disjoint set
+ * @param parent the parent array
+ * @param x the first index to union
+ * @param y the second index to union
+ * @return void
+ */
+void unionSet(vector<int> &parent, int x, int y);
+
+/**
+ * @brief union function for disjoint set with path compression
+ * @param parent the parent array
+ * @param x the first index to union
+ * @param y the second index to union
+ * @return void
+ */
+void unionSetPathCompression(vector<int> &parent, int x, int y);

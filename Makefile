@@ -40,4 +40,4 @@ $(BUILD_DIR):
 
 # Rule to clean build files
 clean:
-	rm -rf $(TARGET) $(BUILD_DIR)/*
+	rm -rf $(TARGET) $(BUILD_DIR)/* ./results/*.txt

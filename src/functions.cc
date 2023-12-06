@@ -87,6 +87,44 @@ void printToFile(vector<Edge> edges, int numVertices, string filename)
     outstream.close();
 }
 
+int find(vector<int> &parent, int i)
+{
+    if (i != parent[i])
+    {
+        i = parent[i];
+    }
+    return parent[i];
+}
+
+int findPathCompression(vector<int> &parent, int i)
+{
+    if (i != parent[i])
+    {
+        parent[i] = findPathCompression(parent, parent[i]);
+    }
+    return parent[i];
+}
+
+void unionSet(vector<int> &parent, int x, int y)
+{
+    int xset = find(parent, x);
+    int yset = find(parent, y);
+    if (xset != yset)
+    {
+        parent[xset] = yset;
+    }
+}
+
+void unionSetPathCompression(vector<int> &parent, int x, int y)
+{
+    int xset = findPathCompression(parent, x);
+    int yset = findPathCompression(parent, y);
+    if (xset != yset)
+    {
+        parent[xset] = yset;
+    }
+}
+
 EdgeData::EdgeData(vector<Edge> edges, int numVertices)
 {
     this->edges = edges;
@@ -133,6 +171,62 @@ vector<Edge> EdgeData::prims()
         mst.push_back(nextEdge);
         visitedVertices.insert(nextEdge.source);
         visitedVertices.insert(nextEdge.destination);
+    }
+
+    return mst;
+}
+
+vector<Edge> EdgeData::kruskals()
+{
+    // sort the edges by weight
+    sort(edges.begin(), edges.end(), [](Edge a, Edge b)
+         { return a.weight < b.weight; });
+
+    // create disjoint sets
+    vector<int> parent(numVertices + 1);
+    for (int i = 1; i <= numVertices; i++)
+        parent[i] = i;
+
+    // Kruskal's algorithm
+    vector<Edge> mst;
+    for (Edge &edge : edges)
+    {
+        int x = find(parent, edge.source);
+        int y = find(parent, edge.destination);
+
+        if (x != y)
+        {
+            mst.push_back(edge);
+            unionSet(parent, x, y);
+        }
+    }
+
+    return mst;
+}
+
+vector<Edge> EdgeData::kruskalsPathCompression()
+{
+    // sort the edges by weight
+    sort(edges.begin(), edges.end(), [](Edge a, Edge b)
+         { return a.weight < b.weight; });
+
+    // create disjoint sets
+    vector<int> parent(numVertices + 1);
+    for (int i = 1; i <= numVertices; i++)
+        parent[i] = i;
+
+    // Kruskal's algorithm
+    vector<Edge> mst;
+    for (Edge &edge : edges)
+    {
+        int x = findPathCompression(parent, edge.source);
+        int y = findPathCompression(parent, edge.destination);
+
+        if (x != y)
+        {
+            mst.push_back(edge);
+            unionSetPathCompression(parent, x, y);
+        }
     }
 
     return mst;
