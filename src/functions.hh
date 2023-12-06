@@ -51,3 +51,19 @@ public:
  * @return void
  */
 void readData(EdgeData &container, string filename);
+
+/**
+ * @brief prints the data to the file
+ * @param edges the edges to print
+ * @param numVertices the number of vertices in the graph
+ * @param filename the name of the file to print the data to
+ * @return void
+ */
+void printToFile(vector<Edge> edges, int numVertices, string filename);
+
+/**
+ * @brief calculates the number of vertices in the graph (used for testing)
+ * @param edges the edges in the graph
+ * @return int the number of vertices in the graph
+ */
+int calculateNumVertices(vector<Edge> edges);

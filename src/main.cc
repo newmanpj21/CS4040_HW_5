@@ -19,8 +19,9 @@ int main()
     EdgeData container;
     readData(container, "./test/graph_v100_e150.txt");
 
-    // test prims algorithm
+    // execute Prim's algorithm on the data and store the result
     vector<Edge> edges = container.prims();
+    printToFile(edges, container.numVertices, "./results/prims_results.txt");
 
     return 0;
 }

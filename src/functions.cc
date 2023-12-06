@@ -14,42 +14,33 @@ using namespace std;
 
 void readData(EdgeData &container, string filename)
 {
-    // open the file
-    ifstream instream;
-    instream.open(filename);
+    ifstream instream(filename);
 
-    // check if the file is open
     if (!instream.is_open())
     {
         cout << "Error opening file" << endl;
         return;
     }
 
-    // read the number of vertices
     string temp;
     int intNumVertices;
     getline(instream, temp);
     intNumVertices = stoi(temp);
 
-    // read the edges
     vector<Edge> edges;
-    int source;
-    int destination;
-    int weight;
-    string check;
-    while (!instream.eof())
+    int source, destination, weight;
+    while (getline(instream, temp))
     {
+        size_t pos = temp.find(',');
+        source = stoi(temp.substr(0, pos));
+        temp.erase(0, pos + 1);
 
-        getline(instream, check, ',');
-        if (check == "")
-        {
-            break;
-        }
-        source = stoi(temp);
-        getline(instream, temp, ',');
-        destination = stoi(temp);
-        getline(instream, temp);
+        pos = temp.find(',');
+        destination = stoi(temp.substr(0, pos));
+        temp.erase(0, pos + 1);
+
         weight = stoi(temp);
+
         Edge edge;
         edge.source = source;
         edge.destination = destination;
@@ -57,12 +48,43 @@ void readData(EdgeData &container, string filename)
         edges.push_back(edge);
     }
 
-    // close the file
     instream.close();
 
-    // store the data in the container
     container.edges = edges;
     container.numVertices = intNumVertices;
+}
+
+int calculateNumVertices(vector<Edge> edges)
+{
+    set<int> vertices;
+    for (const auto &edge : edges)
+    {
+        vertices.insert(edge.source);
+        vertices.insert(edge.destination);
+    }
+    return vertices.size();
+}
+
+void printToFile(vector<Edge> edges, int numVertices, string filename)
+{
+    // open the file
+    ofstream outstream(filename);
+
+    // check if the file opened correctly
+    if (!outstream.is_open())
+    {
+        cout << "Error opening file" << endl;
+        return;
+    }
+
+    // print the data to the file
+    outstream << numVertices << endl;
+    for (const auto &edge : edges)
+    {
+        outstream << edge.source << "," << edge.destination << "," << edge.weight << endl;
+    }
+
+    outstream.close();
 }
 
 EdgeData::EdgeData(vector<Edge> edges, int numVertices)
