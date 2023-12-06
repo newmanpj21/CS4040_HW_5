@@ -137,9 +137,13 @@ EdgeData::EdgeData()
     this->numVertices = 0;
 }
 
+// this function was a bitch for some reason... pardon my french
 vector<Edge> EdgeData::prims()
 {
+    // Initialize the minimum spanning tree
     vector<Edge> mst;
+
+    // Create a set of all vertices in the graph
     set<int> allVertices;
     for (const auto &edge : edges)
     {
@@ -147,32 +151,43 @@ vector<Edge> EdgeData::prims()
         allVertices.insert(edge.destination);
     }
 
+    // Create a set of visited vertices and start from the source of the first edge
     set<int> visitedVertices;
-    visitedVertices.insert(edges[0].source); // start from the source of the first edge
+    visitedVertices.insert(edges[0].source);
 
+    // While there are still unvisited vertices
     while (visitedVertices != allVertices)
     {
+        // Initialize the next edge to be added to the MST and its weight
         Edge nextEdge;
         int minWeight = INT_MAX;
 
+        // For each edge in the graph
         for (const auto &edge : edges)
         {
+            // If the edge connects a visited vertex with an unvisited vertex
             if ((visitedVertices.count(edge.source) && !visitedVertices.count(edge.destination)) ||
                 (visitedVertices.count(edge.destination) && !visitedVertices.count(edge.source)))
             {
+                // If the weight of the edge is less than the current minimum weight
                 if (edge.weight < minWeight)
                 {
+                    // Update the next edge and the minimum weight
                     nextEdge = edge;
                     minWeight = edge.weight;
                 }
             }
         }
 
+        // Add the next edge to the MST
         mst.push_back(nextEdge);
+
+        // Add the vertices of the next edge to the set of visited vertices
         visitedVertices.insert(nextEdge.source);
         visitedVertices.insert(nextEdge.destination);
     }
 
+    // Return the MST
     return mst;
 }
 
